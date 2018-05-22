@@ -3,27 +3,43 @@ import React, {Component} from 'react';
 
 class Task extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.day
-    };
-    this.dayChange = this.dayChange.bind(this);
-  }
-
-  // deletes task by id
   onDelete() {
-    this.props.deleteTask(this.props.id);
+    let tasks = this.props.getAppState('tasks');
+    tasks = tasks.filter((task) => {
+      return task.id !== this.props.id;
+    });
+    this.props.setAppState({
+      tasks: tasks
+    });
+  }
+  
+  // deletes task by id
+  onCheck() {
+    let id = parseInt(this.props.id);
+
+    let tasks = this.props
+      .getAppState('tasks')
+      .map((task) => {
+        if (task.id === id) {
+          task.active =! task.active;
+        }
+        return task;
+      });
+
+    this.props.setAppState({
+      tasks: tasks
+    });
   }
 
+  
 
-  /**
-   * Sets task active or done
-   * @param ev checkbox event
-   */
-  onCheck(ev) {
-    this.props.toggleTasks(ev.target.value);
-  }
+  // /**
+  //  * Sets task active or done
+  //  * @param ev checkbox event
+  //  */
+  // onCheck(ev) {
+  //   this.props.toggleTasks(ev.target.value);
+  // }
 
   renderEditButton() {
     if(this.props.isOpen === this.props.id){
@@ -37,19 +53,13 @@ class Task extends Component {
   onClickEdit() {
     this.props.setOpen(this.props.id);
   }
-
-  dayChange(ev) {
-    this.setState({
-      value: ev.target.value
-    });
-  }
   
   renderEditForm() {
     if (this.props.isOpen === this.props.id) {
       return(
         <form onSubmit={this.onEdit.bind(this)}>
           <input name='title' type='text' defaultValue={this.props.title} />
-          <select name='day' defaultValue={this.state.value} onChange={this.dayChange}>
+          <select name='day' defaultValue={this.props.day}>
             <option value="monday">Monday</option>
             <option value="tuesday">Tuesday</option>
             <option value="wednesday">Wednesday</option>
@@ -67,18 +77,31 @@ class Task extends Component {
   onEdit(ev) {
     ev.preventDefault();
     let formData = new FormData(ev.target);
-    let trimTitle = formData.get('title');
-    if(!trimTitle.trim()){
+    let title = formData.get('title');
+    let day = formData.get('day');
+    if(!title.trim()){
       return false;
     }
-    this.props.editTask(this.props.id, formData.get('title'), this.state.value);
-    this.props.setOpen(0);
+
+    let tasks = this.props.getAppState('tasks').map((task) => {
+      if (task.id === this.props.id) {
+        task.title = title;
+        task.day = day;
+        return task;
+      }
+      return task;
+    });
+    this.props.setAppState({
+      tasks: tasks
+    }, () => {
+      this.props.setOpen(0);
+    });
   }
 
   render() {
     return (
       <li>
-        <input type='checkbox' onChange={this.onCheck.bind(this)} value={this.props.id} defaultChecked={!this.props.active} />
+        <input type='checkbox' onChange={this.onCheck.bind(this)} value={this.props.id.toString()} defaultChecked={!this.props.active} />
         {this.renderEditForm()}&nbsp;
         {this.props.time.getDate()}/{this.props.time.getMonth()}/{this.props.time.getFullYear()}
         {(!this.props.active)? this.renderEditButton() : ''}

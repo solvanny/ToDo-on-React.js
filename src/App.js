@@ -10,20 +10,29 @@ class App extends Component {
     super(props);
     
     this.state = {
+      id: 1,
       tasks: []
     };
-    this.id = 1;
     this.getTasks = this.getTasks.bind(this);
     this.toggleTasks = this.toggleTasks.bind(this);
-    this.setTasks = this.setTasks.bind(this);
-    this.deleteTask = this.deleteTask.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.getAppState = this.getAppState.bind(this);
+    this.setAppState = this.setAppState.bind(this);
   }
 
   //---------------------------------------------------------------------
 
-  getAppState() {
-    return this.state;
+  getAppState(name) {
+
+    if (!name) {
+      return this.state;
+    }
+
+    if (this.state[name] === undefined) {
+      throw Error('Not existing state');
+    }
+
+    return this.state[name];
   }
 
   setAppState(partialState, callback) {
@@ -65,36 +74,6 @@ class App extends Component {
     });
   }
 
-
-  setTasks(value, day) {
-
-    let tasks = this.state.tasks;
-
-    for(let i = 0; i<value.length; i++) {
-      if(!value[i].trim()) continue; 
-      var task = {
-        id: this.id++,
-        active: true,
-        title: value[i],
-        time: new Date(),
-        day: day
-      };
-      tasks = [...tasks, task];
-    }
-    this.setState({
-      tasks: tasks
-    });
-  }
-
-  deleteTask(id) {
-    let tasks = this.state.tasks.filter((task) => {
-      return task.id !== id;
-    });
-    this.setState({
-      tasks: tasks
-    });
-  }
-
   editTask(id, title, newDay) {
     let tasks = this.state.tasks.map((task) => {
       if (task.id === id) {
@@ -117,13 +96,13 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <Switch>
-            <Route path="/" exact render={() => <Page day="monday"  deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
-            <Route path="/tuesday" exact render={() => <Page day="tuesday" deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
-            <Route path="/wednesday" exact render={() => <Page day="wednesday" deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
-            <Route path="/thursday" exact render={() => <Page day="thursday" deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
-            <Route path="/friday" exact render={() => <Page day="friday" deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
-            <Route path="/saturday" exact render={() => <Page day="saturday" deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
-            <Route path="/sunday" exact render={() => <Page day="sunday" deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/" exact render={() => <Page day="monday"  getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/tuesday" exact render={() => <Page day="tuesday" getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/wednesday" exact render={() => <Page day="wednesday" getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/thursday" exact render={() => <Page day="thursday" getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/friday" exact render={() => <Page day="friday" getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/saturday" exact render={() => <Page day="saturday" getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
+            <Route path="/sunday" exact render={() => <Page day="sunday" getAppState={this.getAppState} setAppState={this.setAppState} deleteTask={this.deleteTask} setTasks={this.setTasks} getTasks={this.getTasks} toggleTasks={this.toggleTasks} editTask={this.editTask} />} />
           </Switch>
         </BrowserRouter>
       </div>

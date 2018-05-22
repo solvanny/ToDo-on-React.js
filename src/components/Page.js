@@ -7,10 +7,10 @@ const Page = (props) => {
   return (
     <div>
       <Menu />
-      <TaskForm day={props.day} setTasks={props.setTasks} />
-      <TaskList tasks={props.getTasks(props.day)} toggleTasks={props.toggleTasks} deleteTask={props.deleteTask} editTask={props.editTask} />
+      <TaskForm {...props} />
+      <TaskList {...props} tasks={props.getTasks(props.day)} toggleTasks={props.toggleTasks} deleteTask={props.deleteTask} editTask={props.editTask} />
       <hr />
-      <TaskList tasks={props.getTasks(props.day, false)} toggleTasks={props.toggleTasks} deleteTask={props.deleteTask} editTask={props.editTask} />
+      <TaskList {...props} tasks={props.getTasks(props.day, false)} toggleTasks={props.toggleTasks} deleteTask={props.deleteTask} editTask={props.editTask} />
     </div>
   );
 };

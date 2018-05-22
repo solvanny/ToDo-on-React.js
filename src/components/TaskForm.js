@@ -2,6 +2,27 @@ import React, { Component } from 'react';
 
 class TaskForm extends Component {
 
+  setTasks(value, day) {
+
+    let tasks = this.props.getAppState('tasks');
+    let id = this.props.getAppState('id');
+
+    for(let i = 0; i<value.length; i++) {
+      if(!value[i].trim()) continue; 
+      var task = {
+        id: id++,
+        active: true,
+        title: value[i],
+        time: new Date(),
+        day: day
+      };
+      tasks = [...tasks, task];
+    }
+    this.props.setAppState({
+      id: id,
+      tasks: tasks
+    });
+  }
    
   render() { 
 
@@ -27,7 +48,7 @@ class TaskForm extends Component {
     if(!task.trim()){
       return false;
     }
-    this.props.setTasks(task.split(';'), this.props.day);
+    this.setTasks(task.split(';'), this.props.day);
     ev.target.reset();
   }
 }

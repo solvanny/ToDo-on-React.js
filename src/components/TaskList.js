@@ -13,7 +13,7 @@ class TaskList extends Component {
   showTasks() {
     return this.props.tasks.map((task) => {
       return (
-        <Task key={'task-' + task.id} {...task} deleteTask={this.props.deleteTask} toggleTasks={this.props.toggleTasks} isOpen={this.state.isOpen} setOpen={this.setOpen} editTask={this.props.editTask}/>
+        <Task key={'task-' + task.id} {...task} {...this.props} deleteTask={this.props.deleteTask} toggleTasks={this.props.toggleTasks} isOpen={this.state.isOpen} setOpen={this.setOpen} editTask={this.props.editTask}/>
       );
     });
   }
