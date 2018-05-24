@@ -10,10 +10,28 @@ class TaskList extends Component {
     this.setOpen = this.setOpen.bind(this);
   }
 
+  getTasks() {
+    let tasks = this.props.getAppState('tasks');
+    let active = (this.props.active === '1') ? true: false;
+    return tasks.filter((task) => {
+      return task.day === this.props.day && task.active === active;
+    })
+      .sort((prev, next) => {
+        if (prev.time > next.time) {
+          return this.props.active ? -1 : 1;
+        }
+        if (prev.time < next.time) {
+          return this.props.active ? 1 : -1;
+        }
+        return 0;
+      });
+  }
+
   showTasks() {
-    return this.props.tasks.map((task) => {
+    let props = this.props;
+    return this.getTasks().map((task) => {
       return (
-        <Task key={'task-' + task.id} {...task} {...this.props} deleteTask={this.props.deleteTask} toggleTasks={this.props.toggleTasks} isOpen={this.state.isOpen} setOpen={this.setOpen} editTask={this.props.editTask}/>
+        <Task key={'task-' + task.id}  {...props} {...task}  isOpen={this.state.isOpen} setOpen={this.setOpen}  />
       );
     });
   }

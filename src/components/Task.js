@@ -15,8 +15,7 @@ class Task extends Component {
   
   // deletes task by id
   onCheck() {
-    let id = parseInt(this.props.id);
-
+    let id = parseInt(this.props.id, 10);
     let tasks = this.props
       .getAppState('tasks')
       .map((task) => {
@@ -25,22 +24,11 @@ class Task extends Component {
         }
         return task;
       });
-
     this.props.setAppState({
       tasks: tasks
     });
   }
-
-  
-
-  // /**
-  //  * Sets task active or done
-  //  * @param ev checkbox event
-  //  */
-  // onCheck(ev) {
-  //   this.props.toggleTasks(ev.target.value);
-  // }
-
+ 
   renderEditButton() {
     if(this.props.isOpen === this.props.id){
       return '';
@@ -109,7 +97,6 @@ class Task extends Component {
       </li>
     );
   }
-  
 }
 
 export default Task;

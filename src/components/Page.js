@@ -8,9 +8,9 @@ const Page = (props) => {
     <div>
       <Menu />
       <TaskForm {...props} />
-      <TaskList {...props} tasks={props.getTasks(props.day)} toggleTasks={props.toggleTasks} deleteTask={props.deleteTask} editTask={props.editTask} />
+      <TaskList {...props} active="1" />
       <hr />
-      <TaskList {...props} tasks={props.getTasks(props.day, false)} toggleTasks={props.toggleTasks} deleteTask={props.deleteTask} editTask={props.editTask} />
+      <TaskList {...props} active="0" />
     </div>
   );
 };

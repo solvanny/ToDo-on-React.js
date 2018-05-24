@@ -3,10 +3,8 @@ import React, { Component } from 'react';
 class TaskForm extends Component {
 
   setTasks(value, day) {
-
     let tasks = this.props.getAppState('tasks');
     let id = this.props.getAppState('id');
-
     for(let i = 0; i<value.length; i++) {
       if(!value[i].trim()) continue; 
       var task = {
@@ -23,9 +21,19 @@ class TaskForm extends Component {
       tasks: tasks
     });
   }
-   
-  render() { 
 
+  onSubmit(ev) {
+    ev.preventDefault();
+    let formData = new FormData(ev.target);
+    let task = formData.get('task');
+    if(!task.trim()){
+      return false;
+    }
+    this.setTasks(task.split(';'), this.props.day);
+    ev.target.reset();
+  }
+
+  render() { 
     return (
       <div>
         <form onSubmit={this.onSubmit.bind(this)}>
@@ -37,19 +45,6 @@ class TaskForm extends Component {
         </form>
       </div>
     );
-  }
-
-  onSubmit(ev) {
-    ev.preventDefault();
-    let formData = new FormData(ev.target);
-    
-    let task = formData.get('task');
-    
-    if(!task.trim()){
-      return false;
-    }
-    this.setTasks(task.split(';'), this.props.day);
-    ev.target.reset();
   }
 }
 
